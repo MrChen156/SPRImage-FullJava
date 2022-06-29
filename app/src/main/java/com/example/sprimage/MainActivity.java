@@ -18,6 +18,7 @@ import android.graphics.Matrix;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 
 import java.io.FileNotFoundException;
@@ -196,8 +197,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // 具体计算函数
-    private int computeFunc(Mat src, Mat ref){
-        return 0;
+    private int computeFunc(Mat current, Mat reference){
+        Mat dst = new Mat();
+        try {
+            Core.subtract(current, reference, dst);
+        }
+        catch (Exception e) {
+            return 0;
+        }
+        return 1;
     }
 
     // 比较两个图片的大小
