@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.graphics.Matrix;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
 import java.io.FileNotFoundException;
@@ -32,9 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 下面两个布尔变量用来判断有没有选好图像以防止错误计算
     private boolean CURRENT_IMAGE_UNPICK = true;
     private boolean REFERENCE_IMAGE_UNPICK = true;
-    // 下面两个URI用来存储文件路径
+    // 下面两个Bitmap用来存储文件
     private Bitmap currentImage;
     private Bitmap referenceImage;
+    // 用来报错的Tag
+    public final static String TAG = "SPR-Image";
     ImageView referenceView;
     ImageView currentView;
     TextView textView;
@@ -196,16 +200,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    // 具体计算函数
+    // 具体计算函数--求差功能
     private int computeFunc(Mat current, Mat reference){
-        Mat dst = new Mat();
+        Mat dst = new Mat(CvType.CV_32FC1);
+        current.convertTo(current, CvType.CV_32FC1);
+        reference.convertTo(reference, CvType.CV_32FC1);
         try {
+            Log.i(TAG,"OpenCV.subtract is used");
             Core.subtract(current, reference, dst);
+            Mat dstSum = getSumFromDST(dst);
+            showDST_test(dstSum);
         }
         catch (Exception e) {
+            Log.e(TAG,"Subtract, getSumFromDST or showDST method is used and there are some errors.");
             return 0;
         }
         return 1;
+    }
+
+    // 把求差结果每个像素之和相加
+    private Mat getSumFromDST(Mat dst){
+        Log.i(TAG, "getSumFromDST is used.");
+        Mat sum = new Mat(dst.size(), CvType.CV_32FC1);
+        return sum;
+    }
+
+    // 测试用的函数：展示相减图
+    private void showDST_test(Mat dst_test) {
+        String message = "showDST准备调用";
+        textView.setText(message);
+        Bitmap image_test = currentImage;
+        Utils.matToBitmap(dst_test, image_test);
+//        currentView.setImageBitmap(image_test);
     }
 
     // 比较两个图片的大小
