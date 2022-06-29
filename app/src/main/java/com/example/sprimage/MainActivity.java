@@ -17,6 +17,8 @@ import android.widget.Toast;
 import android.graphics.Matrix;
 
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
 import java.io.FileNotFoundException;
 
@@ -26,8 +28,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final int PICK_CURRENT = 12;
     private final int PICK_REFERENCE = 13;
+    // 下面两个布尔变量用来判断有没有选好图像以防止错误计算
+    private boolean CURRENT_IMAGE_UNPICK = true;
+    private boolean REFERENCE_IMAGE_UNPICK = true;
+    // 下面两个URI用来存储文件路径
+    private Bitmap currentImage;
+    private Bitmap referenceImage;
     ImageView referenceView;
     ImageView currentView;
+    TextView textView;
+    String initMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,18 +47,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 监听按钮和图片元素
         Button button_ref = (Button) findViewById(R.id.buttonRef);
         Button button_cur = (Button) findViewById(R.id.buttonCur);
+        Button button_compute = (Button) findViewById(R.id.buttonCompute);
         referenceView = findViewById(R.id.ReferenceImage);
         currentView = findViewById(R.id.CurrentImage);
 
 
         // 加载Opencv库
-        String message = iniLoadOpenCV();//加载OpenCV的本地库
-        TextView textView = findViewById(R.id.text_view);
-        textView.setText(message);
+        initMessage = iniLoadOpenCV();//加载OpenCV的本地库
+        textView = findViewById(R.id.text_view);
+        textView.setText(initMessage);
 
         // 设置按钮方法
         button_ref.setOnClickListener(this);
         button_cur.setOnClickListener(this);
+        button_compute.setOnClickListener(this);
     }
 
     // 设置按钮反应
@@ -59,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             selectCurrentImage();
         } else if (id == R.id.buttonRef) {
             selectRefImage();
+        } else if (id == R.id.buttonCompute) {
+            computeOutput();
         }
     }
 
@@ -116,6 +130,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+            } else { // 当取图片失败之后防止错误计算
+                if (requestCode == PICK_CURRENT) CURRENT_IMAGE_UNPICK = true;
+                if (requestCode == PICK_REFERENCE) REFERENCE_IMAGE_UNPICK = true;
             }
         }
     }
@@ -130,14 +147,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Bitmap rotatedImage = rotateImage(image);
             if (Flag == PICK_CURRENT) {
                 currentView.setImageBitmap(rotatedImage);
+                currentImage = rotatedImage;
+                CURRENT_IMAGE_UNPICK = false; // 图片不为空，可以计算
             } else if (Flag == PICK_REFERENCE) {
                 referenceView.setImageBitmap(rotatedImage);
+                referenceImage = rotatedImage;
+                REFERENCE_IMAGE_UNPICK = false;
             }
         } else {
             if (Flag == PICK_CURRENT) {
                 currentView.setImageBitmap(image);
+                currentImage = image;
+                CURRENT_IMAGE_UNPICK = false;
             } else if (Flag == PICK_REFERENCE) {
                 referenceView.setImageBitmap(image);
+                referenceImage = image;
+                REFERENCE_IMAGE_UNPICK = false;
             }
         }
     }
@@ -149,6 +174,42 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), matrix, true);
     }
 
+    // 进行计算并把结果放到textView里面
+    private void computeOutput() {
+        if (CURRENT_IMAGE_UNPICK && REFERENCE_IMAGE_UNPICK) { // 只有两个同时为false才表明计算可以继续
+            String message =  "Images Unpicked!";
+            textView.setText(message);
+        } else if (isBitmapSame()) {
+            Mat srcMat = new Mat();
+            Mat refMat = new Mat();
+            Utils.bitmapToMat(currentImage, srcMat);
+            Utils.bitmapToMat(referenceImage, refMat);
+            int outputNum = computeFunc(srcMat, refMat);
+            String outputMessage = Integer.toString(outputNum);
+            textView.setText(outputMessage);
+        } else if (!isBitmapSame()) {
+            String unMatchMessage = "sizes unmatched";
+            textView.setText(unMatchMessage);
+            CURRENT_IMAGE_UNPICK = true;
+            REFERENCE_IMAGE_UNPICK = true;
+        }
+    }
+
+    // 具体计算函数
+    private int computeFunc(Mat src, Mat ref){
+        return 0;
+    }
+
+    // 比较两个图片的大小
+    private boolean isBitmapSame() {
+       boolean result = currentImage.getHeight() == referenceImage.getHeight() &&
+        currentImage.getWidth() == referenceImage.getWidth();
+       if (result) { // 如果两个图片一样大就可以重新继续了
+           CURRENT_IMAGE_UNPICK = false;
+           REFERENCE_IMAGE_UNPICK = false;
+       }
+       return result;
+    }
 }
 
 

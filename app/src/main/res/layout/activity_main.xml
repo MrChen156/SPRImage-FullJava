@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/text_view"
         android:layout_width="wrap_content"
-        android:layout_height="19dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Hello World!"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,26 +40,32 @@
 
     <Button
         android:id="@+id/buttonRef"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="70dp"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
         android:text="@string/RefButton"
-        app:layout_constraintEnd_toStartOf="@+id/buttonCur"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CurrentImage" />
 
     <Button
         android:id="@+id/buttonCur"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="70dp"
-        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
         android:text="@string/SrcButton"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCompute"
         app:layout_constraintStart_toEndOf="@+id/buttonRef"
+        app:layout_constraintTop_toBottomOf="@+id/CurrentImage" />
+
+    <Button
+        android:id="@+id/buttonCompute"
+        android:layout_width="125dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/ComputeButton"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/CurrentImage" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

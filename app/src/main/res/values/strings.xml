@@ -4,4 +4,5 @@
     <string name="SrcButton">Select Current</string>
     <string name="the_selected_image">The selected Image</string>
     <string name="the_selected_current_image">The selected current Image</string>
+    <string name="ComputeButton">Compute!</string>
 </resources>
