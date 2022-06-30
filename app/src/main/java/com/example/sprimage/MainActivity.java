@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.nfc.Tag;
+// import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -220,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 把求差结果每个像素之和相加
     private Mat getSumFromDST(Mat dst){
-        Log.i(TAG, "getSumFromDST is used.");
+        Log.i(TAG, "getSumFromDST is going to be used.");
         Mat sum = new Mat(dst.size(), CvType.CV_32FC1);
         return sum;
     }

@@ -16,3 +16,4 @@ rootProject.name = "SPRImage"
 include ':app'
 include ':OpencvLib'
 include ':java'
+include ':ImageMatrix'
