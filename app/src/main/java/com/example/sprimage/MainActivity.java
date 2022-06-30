@@ -187,8 +187,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String message =  "Images Unpicked!";
             textView.setText(message);
         } else if (isBitmapSame()) {
+            Log.i(TAG,"准备计算了");
             ImageMatrix curMat = ImageMatrixFactory.CreateFromBitmap(currentImage);
             ImageMatrix refMat = ImageMatrixFactory.CreateFromBitmap(referenceImage);
+            Log.i(TAG,"完成计算准备了");
             int outputNum = computeFunc(curMat, refMat);
             String outputMessage = Integer.toString(outputNum);
             textView.setText(outputMessage);
@@ -202,13 +204,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 具体计算函数
     private int computeFunc(ImageMatrix current, ImageMatrix reference){
+        Log.i(TAG,"马上调用计算了");
         ImageMatrix dst = new ImageMatrix(current);
         ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
         ImageMatrix dst_sum = new ImageMatrix(current.getHeight(), current.getWidth(),1);
         dst = dst.minusImageMatrix(current, reference);
         dst_red = dst.spiltMatrix(dst,0); // get Red Channel
         dst_sum = dst.sumElement(dst);
-        dst =dst.subtractMatrics(dst_red, dst_sum);
+        dst = dst.subtractMatrics(dst_red, dst_sum);
         return dst.MatrixSum(dst);
     }
 

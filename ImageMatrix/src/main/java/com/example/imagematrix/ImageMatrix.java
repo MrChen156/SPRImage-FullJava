@@ -98,6 +98,7 @@ public class ImageMatrix {
 
     public ImageMatrix minusImageMatrix(ImageMatrix src1, ImageMatrix src2){
         ImageMatrix dst = new ImageMatrix(src1);
+        Log.i(IM_TAG, "调用减法");
         if (isMatricsEqual(src1, src2)){
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
@@ -119,6 +120,7 @@ public class ImageMatrix {
     // 求一个channel的和
     public ImageMatrix sumElement(ImageMatrix src){
         ImageMatrix dst = new ImageMatrix(src.getHeight(), src.getWidth(), 1);
+        Log.i(IM_TAG, "调用但求和");
         int X_max = src.getHeight();
         int Y_max = src.getWidth();
         int C_max = src.getChannelNum();
@@ -136,6 +138,7 @@ public class ImageMatrix {
 
     // 按channel分割Matrix
     public ImageMatrix spiltMatrix(ImageMatrix src, int N){
+        Log.i(IM_TAG, "调用分割");
         if (src.getChannelNum() == 0){
             return src;
         } else if (src.getChannelNum() >= N){
@@ -150,6 +153,7 @@ public class ImageMatrix {
     // 做除法
     public ImageMatrix subtractMatrics(ImageMatrix src1, ImageMatrix src2){
         ImageMatrix dst = new ImageMatrix(src1);
+        Log.i(IM_TAG, "调用除法");
         if (isMatricsEqual(src1, src2)){
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
@@ -176,6 +180,7 @@ public class ImageMatrix {
 
     // 求和
     public int MatrixSum(ImageMatrix src){
+        Log.i(IM_TAG, "调用总求和");
         int HH = src.getHeight();
         int WW = src.getWidth();
         int sum = 0;
