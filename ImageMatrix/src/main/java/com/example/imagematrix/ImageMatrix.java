@@ -32,7 +32,7 @@ public class ImageMatrix {
     public ImageMatrix(ImageMatrix src){
         this.Height = src.getHeight() + 1;
         this.Width = src.getWidth() + 1;
-        this.ChannelNum = src.getChannelNum();
+        this.ChannelNum = src.getChannelNum() + 1;
         this.Values = new double[Height][Width][ChannelNum];
     }
 
@@ -119,8 +119,7 @@ public class ImageMatrix {
     // 单矩阵运算
     // 求一个channel的和
     public ImageMatrix sumElement(ImageMatrix src){
-        ImageMatrix dst = new ImageMatrix(src.getHeight(), src.getWidth(), 1);
-        Log.i(IM_TAG, "调用单求和");
+        ImageMatrix dst = new ImageMatrix(src.getHeight() + 1, src.getWidth() + 1, 1);
         int X_max = src.getHeight();
         int Y_max = src.getWidth();
         int C_max = src.getChannelNum();
@@ -133,6 +132,8 @@ public class ImageMatrix {
                 dst.putValue(i, j, 0, theValue);
             }
         }
+        String message_sumElem = "单求和得到的矩阵维度是" + dst.getChannelNum();
+        Log.i(IM_TAG, message_sumElem);
         return dst;
     }
 
@@ -180,20 +181,22 @@ public class ImageMatrix {
                 }
             }
         } else {
-            String message_subtract = "src1-src2: (" + (src1.getHeight() - src2.getHeight()) + ", "
+            String message_subtract = "除法矩阵大小差src1-src2: ("
+                    + (src1.getHeight() - src2.getHeight()) + ", "
                     +(src1.getWidth() - src2.getWidth()) + ")";
-            Log.i(IM_TAG, message_subtract);
-            Log.e(IM_TAG, "大小不同的矩阵相除不能完成");
+            Log.e(IM_TAG, message_subtract);
         }
+        String message_sub_result = "除法结果矩阵维度：" + dst.getChannelNum();
+        Log.i(IM_TAG, message_sub_result);
         return dst;
     }
 
     // 求和
-    public int MatrixSum(ImageMatrix src){
+    public double MatrixSum(ImageMatrix src){
         Log.i(IM_TAG, "调用总求和");
         int HH = src.getHeight();
         int WW = src.getWidth();
-        int sum = 0;
+        double sum = 0;
         if (src.getChannelNum() == 0){
             for(int ii = 0; ii < HH; ii++){
                 for(int jj = 0; jj < WW; jj++){
@@ -202,7 +205,8 @@ public class ImageMatrix {
             }
             return sum;
         } else {
-            Log.e(IM_TAG, "矩阵不为一维，请检查。");
+            String message_MatrixSum = "求和矩阵维度为" + src.getChannelNum();
+            Log.e(IM_TAG, message_MatrixSum);
             return -1;
         }
     }

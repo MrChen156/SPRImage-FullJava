@@ -191,8 +191,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ImageMatrix curMat = ImageMatrixFactory.CreateFromBitmap(currentImage);
             ImageMatrix refMat = ImageMatrixFactory.CreateFromBitmap(referenceImage);
             Log.i(TAG,"完成计算准备了");
-            int outputNum = computeFunc(curMat, refMat);
-            String outputMessage = Integer.toString(outputNum);
+            double outputNum = computeFunc(curMat, refMat);
+            String outputMessage = Double.toString(outputNum);
             textView.setText(outputMessage);
         } else if (!isBitmapSame()) {
             String unMatchMessage = "sizes unmatched";
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     // 具体计算函数
-    private int computeFunc(ImageMatrix current, ImageMatrix reference){
+    private double computeFunc(ImageMatrix current, ImageMatrix reference){
         Log.i(TAG,"马上调用计算了");
         ImageMatrix dst = new ImageMatrix(current);
 //        ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
