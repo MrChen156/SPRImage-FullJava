@@ -173,4 +173,22 @@ public class ImageMatrix {
         }
         return dst;
     }
+
+    // 求和
+    public int MatrixSum(ImageMatrix src){
+        int HH = src.getHeight();
+        int WW = src.getWidth();
+        int sum = 0;
+        if (src.getChannelNum() == 0){
+            for(int ii = 0; ii <= HH; ii++){
+                for(int jj = 0; jj <=WW; jj++){
+                    sum += src.getValue(ii, jj, 0);
+                }
+            }
+            return sum;
+        } else {
+            Log.e(IM_TAG, "矩阵不为一维，请检查。");
+            return -1;
+        }
+    }
 }

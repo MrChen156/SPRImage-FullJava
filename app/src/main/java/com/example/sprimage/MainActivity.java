@@ -2,6 +2,9 @@ package com.example.sprimage;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.imagematrix.ImageMatrix;
+import com.example.imagematrix.ImageMatrixFactory;
+
 // import android.nfc.Tag;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -18,10 +21,9 @@ import android.widget.Toast;
 import android.graphics.Matrix;
 
 import org.opencv.android.OpenCVLoader;
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
+//import org.opencv.android.Utils;
+//import org.opencv.core.CvType;
+//import org.opencv.core.Mat;
 
 import java.io.FileNotFoundException;
 
@@ -185,11 +187,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String message =  "Images Unpicked!";
             textView.setText(message);
         } else if (isBitmapSame()) {
-            Mat srcMat = new Mat();
-            Mat refMat = new Mat();
-            Utils.bitmapToMat(currentImage, srcMat);
-            Utils.bitmapToMat(referenceImage, refMat);
-            int outputNum = computeFunc(srcMat, refMat);
+            ImageMatrix curMat = ImageMatrixFactory.CreateFromBitmap(currentImage);
+            ImageMatrix refMat = ImageMatrixFactory.CreateFromBitmap(referenceImage);
+            int outputNum = computeFunc(curMat, refMat);
             String outputMessage = Integer.toString(outputNum);
             textView.setText(outputMessage);
         } else if (!isBitmapSame()) {
@@ -200,39 +200,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    // 具体计算函数--求差功能
-    private int computeFunc(Mat current, Mat reference){
-        Mat dst = new Mat(CvType.CV_32FC1);
-        current.convertTo(current, CvType.CV_32FC1);
-        reference.convertTo(reference, CvType.CV_32FC1);
-        try {
-            Log.i(TAG,"OpenCV.subtract is used");
-            Core.subtract(current, reference, dst);
-            Mat dstSum = getSumFromDST(dst);
-            showDST_test(dstSum);
-        }
-        catch (Exception e) {
-            Log.e(TAG,"Subtract, getSumFromDST or showDST method is used and there are some errors.");
-            return 0;
-        }
-        return 1;
+    // 具体计算函数
+    private int computeFunc(ImageMatrix current, ImageMatrix reference){
+        ImageMatrix dst = new ImageMatrix(current);
+        ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
+        ImageMatrix dst_sum = new ImageMatrix(current.getHeight(), current.getWidth(),1);
+        dst = dst.minusImageMatrix(current, reference);
+        dst_red = dst.spiltMatrix(dst,0); // get Red Channel
+        dst_sum = dst.sumElement(dst);
+        dst =dst.subtractMatrics(dst_red, dst_sum);
+        return dst.MatrixSum(dst);
     }
 
     // 把求差结果每个像素之和相加
-    private Mat getSumFromDST(Mat dst){
-        Log.i(TAG, "getSumFromDST is going to be used.");
-        Mat sum = new Mat(dst.size(), CvType.CV_32FC1);
-        return sum;
-    }
+//    private Mat getSumFromDST(Mat dst){
+//        Log.i(TAG, "getSumFromDST is going to be used.");
+//        Mat sum = new Mat(dst.size(), CvType.CV_32FC1);
+//        return sum;
+//    }
 
-    // 测试用的函数：展示相减图
-    private void showDST_test(Mat dst_test) {
-        String message = "showDST准备调用";
-        textView.setText(message);
-        Bitmap image_test = currentImage;
-        Utils.matToBitmap(dst_test, image_test);
-//        currentView.setImageBitmap(image_test);
-    }
+//    // 测试用的函数：展示相减图
+//    private void showDST_test(Mat dst_test) {
+//        String message = "showDST准备调用";
+//        textView.setText(message);
+//        Bitmap image_test = currentImage;
+//        Utils.matToBitmap(dst_test, image_test);
+////        currentView.setImageBitmap(image_test);
+//    }
 
     // 比较两个图片的大小
     private boolean isBitmapSame() {
