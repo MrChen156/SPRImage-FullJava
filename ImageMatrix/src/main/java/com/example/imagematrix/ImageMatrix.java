@@ -18,7 +18,7 @@ public class ImageMatrix {
             this.ChannelNum = C;
             this.Values = new double[Height][Width][ChannelNum];
         } else {
-            Log.e(IM_TAG, "不能构造负数矩阵");
+            Log.e(IM_TAG, "不能构造负数纬度矩阵");
         }
     }
 
@@ -30,8 +30,8 @@ public class ImageMatrix {
     }
 
     public ImageMatrix(ImageMatrix src){
-        this.Height = src.getHeight();
-        this.Width = src.getWidth();
+        this.Height = src.getHeight() + 1;
+        this.Width = src.getWidth() + 1;
         this.ChannelNum = src.getChannelNum();
         this.Values = new double[Height][Width][ChannelNum];
     }
@@ -83,9 +83,9 @@ public class ImageMatrix {
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
             int C_max = src2.getChannelNum();
-            for(int i = 0;i <= X_max;i++){
-                for(int j = 0; j <= Y_max; j++){
-                    for (int cc = 0; cc <= C_max; cc++){
+            for(int i = 0;i < X_max;i++){
+                for(int j = 0; j < Y_max; j++){
+                    for (int cc = 0; cc < C_max; cc++){
                         dst.putValue(i, j, cc, src1.getValue(i, j, cc) + src2.getValue(i, j, cc));
                     }
                 }
@@ -103,9 +103,9 @@ public class ImageMatrix {
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
             int C_max = src2.getChannelNum();
-            for(int i = 0;i <= X_max;i++){
-                for(int j = 0; j <= Y_max; j++){
-                    for (int cc = 0; cc <= C_max; cc++){
+            for(int i = 0;i < X_max;i++){
+                for(int j = 0; j < Y_max; j++){
+                    for (int cc = 0; cc < C_max; cc++){
                         dst.putValue(i, j, cc, src1.getValue(i, j, cc) - src2.getValue(i, j, cc));
                     }
                 }
@@ -120,14 +120,14 @@ public class ImageMatrix {
     // 求一个channel的和
     public ImageMatrix sumElement(ImageMatrix src){
         ImageMatrix dst = new ImageMatrix(src.getHeight(), src.getWidth(), 1);
-        Log.i(IM_TAG, "调用但求和");
+        Log.i(IM_TAG, "调用单求和");
         int X_max = src.getHeight();
         int Y_max = src.getWidth();
         int C_max = src.getChannelNum();
-        for(int i = 0;i <= X_max;i++){
-            for(int j = 0; j <= Y_max; j++){
+        for(int i = 0;i < X_max;i++){
+            for(int j = 0; j < Y_max; j++){
                 double theValue = 0.0;
-                for (int cc = 0; cc <= C_max; cc++){
+                for (int cc = 0; cc < C_max; cc++){
                     theValue += src.getValue(i, j, cc);
                 }
                 dst.putValue(i, j, 0, theValue);
@@ -142,7 +142,14 @@ public class ImageMatrix {
         if (src.getChannelNum() == 0){
             return src;
         } else if (src.getChannelNum() >= N){
-            ImageMatrix dst = new ImageMatrix(src.getHeight(), src.getWidth(), N);
+            ImageMatrix dst = new ImageMatrix(src.getHeight() + 1, src.getWidth() + 1, 1);
+            for(int ii = 0; ii <= src.getHeight(); ii++){
+                for(int jj = 0; jj <= src.getWidth(); jj ++){
+                    dst.putValue(ii, jj, 0, src.getValue(ii, jj, 0));
+                }
+            }
+            String message_split = "分割得到的矩阵维度" + dst.getChannelNum();
+            Log.i(IM_TAG, message_split);
             return dst;
         } else {
             Log.i(IM_TAG,"维度过大已经返回最大维度");
@@ -158,9 +165,9 @@ public class ImageMatrix {
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
             int C_max = src2.getChannelNum();
-            for(int i = 0;i <= X_max;i++){
-                for(int j = 0; j <= Y_max; j++){
-                    for (int cc = 0; cc <= C_max; cc++){
+            for(int i = 0;i < X_max;i++){
+                for(int j = 0; j < Y_max; j++){
+                    for (int cc = 0; cc < C_max; cc++){
                         if (src2.getValue(i, j, cc)!=0)
                             dst.putValue(i, j, cc, src1.getValue(i, j, cc) / src2.getValue(i, j, cc));
                         else {
@@ -173,6 +180,9 @@ public class ImageMatrix {
                 }
             }
         } else {
+            String message_subtract = "src1-src2: (" + (src1.getHeight() - src2.getHeight()) + ", "
+                    +(src1.getWidth() - src2.getWidth()) + ")";
+            Log.i(IM_TAG, message_subtract);
             Log.e(IM_TAG, "大小不同的矩阵相除不能完成");
         }
         return dst;
@@ -185,8 +195,8 @@ public class ImageMatrix {
         int WW = src.getWidth();
         int sum = 0;
         if (src.getChannelNum() == 0){
-            for(int ii = 0; ii <= HH; ii++){
-                for(int jj = 0; jj <=WW; jj++){
+            for(int ii = 0; ii < HH; ii++){
+                for(int jj = 0; jj < WW; jj++){
                     sum += src.getValue(ii, jj, 0);
                 }
             }

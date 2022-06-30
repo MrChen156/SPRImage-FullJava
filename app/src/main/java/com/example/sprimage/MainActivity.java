@@ -206,13 +206,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private int computeFunc(ImageMatrix current, ImageMatrix reference){
         Log.i(TAG,"马上调用计算了");
         ImageMatrix dst = new ImageMatrix(current);
-        ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
-        ImageMatrix dst_sum = new ImageMatrix(current.getHeight(), current.getWidth(),1);
+//        ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
+//        ImageMatrix dst_sum = new ImageMatrix(current.getHeight(), current.getWidth(),1);
         dst = dst.minusImageMatrix(current, reference);
-        dst_red = dst.spiltMatrix(dst,0); // get Red Channel
-        dst_sum = dst.sumElement(dst);
-        dst = dst.subtractMatrics(dst_red, dst_sum);
-        return dst.MatrixSum(dst);
+        ImageMatrix dst_red = dst.spiltMatrix(dst,0); // get Red Channel
+        ImageMatrix dst_sum = dst.sumElement(dst);
+        ImageMatrix dst_final = dst.subtractMatrics(dst_red, dst_sum);
+        return dst.MatrixSum(dst_final);
     }
 
     // 把求差结果每个像素之和相加
