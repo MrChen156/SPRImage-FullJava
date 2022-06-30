@@ -2,6 +2,7 @@ package com.example.imagematrix;
 
 import android.util.Log;
 
+
 public class ImageMatrix {
     private final static String IM_TAG = "ImageMatrixLog";
     private int Height;
