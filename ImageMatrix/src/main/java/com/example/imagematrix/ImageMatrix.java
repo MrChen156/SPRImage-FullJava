@@ -103,9 +103,9 @@ public class ImageMatrix {
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
             int C_max = src2.getChannelNum();
-            for(int i = 0;i < X_max;i++){
-                for(int j = 0; j < Y_max; j++){
-                    for (int cc = 0; cc < C_max; cc++){
+            for(int i = 0;i <= X_max;i++){
+                for(int j = 0; j <= Y_max; j++){
+                    for (int cc = 0; cc <= C_max; cc++){
                         dst.putValue(i, j, cc, src1.getValue(i, j, cc) - src2.getValue(i, j, cc));
                     }
                 }
@@ -123,17 +123,20 @@ public class ImageMatrix {
         int X_max = src.getHeight();
         int Y_max = src.getWidth();
         int C_max = src.getChannelNum();
-        for(int i = 0;i < X_max;i++){
-            for(int j = 0; j < Y_max; j++){
+        boolean flag = false;
+        for(int i = 0;i <= X_max;i++){
+            for(int j = 0; j <= Y_max; j++){
                 double theValue = 0.0;
-                for (int cc = 0; cc < C_max; cc++){
+                for (int cc = 0; cc <= C_max; cc++){
                     theValue += src.getValue(i, j, cc);
+                    flag = true;
                 }
                 dst.putValue(i, j, 0, theValue);
             }
         }
         String message_sumElem = "单求和得到的矩阵维度是" + dst.getChannelNum();
         Log.i(IM_TAG, message_sumElem);
+        if (flag) Log.i(IM_TAG, "单求和内部调用");;
         return dst;
     }
 
@@ -166,9 +169,9 @@ public class ImageMatrix {
             int X_max = src1.getHeight();
             int Y_max = src1.getWidth();
             int C_max = src2.getChannelNum();
-            for(int i = 0;i < X_max;i++){
-                for(int j = 0; j < Y_max; j++){
-                    for (int cc = 0; cc < C_max; cc++){
+            for(int i = 0;i <= X_max;i++){
+                for(int j = 0; j <= Y_max; j++){
+                    for (int cc = 0; cc <= C_max; cc++){
                         if (src2.getValue(i, j, cc)!=0)
                             dst.putValue(i, j, cc, src1.getValue(i, j, cc) / src2.getValue(i, j, cc));
                         else {
@@ -196,10 +199,10 @@ public class ImageMatrix {
         Log.i(IM_TAG, "调用总求和");
         int HH = src.getHeight();
         int WW = src.getWidth();
-        double sum = 0;
+        double sum = 0.0;
         if (src.getChannelNum() == 0){
-            for(int ii = 0; ii < HH; ii++){
-                for(int jj = 0; jj < WW; jj++){
+            for(int ii = 0; ii <= HH; ii++){
+                for(int jj = 0; jj <= WW; jj++){
                     sum += src.getValue(ii, jj, 0);
                 }
             }
