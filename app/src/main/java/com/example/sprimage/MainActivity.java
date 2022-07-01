@@ -208,11 +208,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ImageMatrix dst = new ImageMatrix(current);
 //        ImageMatrix dst_red = new ImageMatrix(current.getHeight(), current.getWidth(),1);
 //        ImageMatrix dst_sum = new ImageMatrix(current.getHeight(), current.getWidth(),1);
-        dst = dst.minusImageMatrix(current, reference);
-        ImageMatrix dst_red = dst.spiltMatrix(dst,0); // get Red Channel
-        ImageMatrix dst_sum = dst.sumElement(dst);
-        ImageMatrix dst_final = dst.subtractMatrics(dst_red, dst_sum);
-        return dst.MatrixSum(dst_final);
+        dst = current.minusImageMatrix(reference);
+        ImageMatrix dst_red = dst.spiltMatrix(0); // get Red Channel
+        ImageMatrix dst_sum = dst.sumElement();
+        ImageMatrix dst_final = dst_red.subtractMatrics(dst_sum);
+        return dst_final.MatrixSum();
     }
 
     // 把求差结果每个像素之和相加
