@@ -146,7 +146,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // 旋转并展示图片
     private void rotateAndShowImage(int Flag, Uri imagePath) throws FileNotFoundException {
-        Bitmap image = BitmapFactory.decodeStream(getContentResolver().openInputStream(imagePath));
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        Bitmap image = BitmapFactory.decodeStream(getContentResolver().openInputStream(imagePath),null,option);
         int ImageH = image.getHeight();
         int ImageW = image.getWidth();
         int scaleFactor = ImageH / ImageW;

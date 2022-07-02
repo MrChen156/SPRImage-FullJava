@@ -18,7 +18,7 @@ public class ImageMatrix {
             this.ChannelNum = C;
             this.Values = new double[Height][Width][ChannelNum];
         } else {
-            Log.e(IM_TAG, "不能构造负数纬度矩阵");
+            Log.e(IM_TAG, "不能构造负数维度矩阵");
         }
     }
 
