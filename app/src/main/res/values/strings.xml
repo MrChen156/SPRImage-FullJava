@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SPRImage</string>
+    <string name="app_name">单图检测</string>
     <string name="RefButton">Select Reference</string>
     <string name="SrcButton">Select Current</string>
     <string name="the_selected_image">The selected Image</string>
